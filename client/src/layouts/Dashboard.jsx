@@ -14,13 +14,13 @@ const Dashboard = () => {
     }
 
     return (
-        <div className="font-lato md:flex container min-h-screen">
+        <div className="font-lato md:flex min-h-screen w-full">
             {/* navbar */}
             <div className=" ">
             <DashboardNav/>
             </div>
 
-            <div className="flex-1 md:ml-64 my-6">
+            <div className="flex-1 md:ml-64 my-6 ">
                 <Outlet />
             </div>
 

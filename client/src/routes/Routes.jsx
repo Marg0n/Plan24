@@ -8,6 +8,7 @@ import Root from "../layouts/Root";
 import LandingPage from "../pages/landingPage/LandingPage";
 import Profile from "../components/dashboard/Profile";
 import AddTask from "../components/dashboard/AddTask";
+import UpcomingTasks from "../components/dashboard/UpcomingTasks";
 
 export const router = createBrowserRouter([
     {
@@ -48,7 +49,7 @@ export const router = createBrowserRouter([
             },
             {
                 path: "upcomingTasks",
-                element: <Profile />,
+                element: <UpcomingTasks />,
 
             },
         ],

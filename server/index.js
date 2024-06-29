@@ -152,12 +152,19 @@ async function run() {
     // API Connections for tasks
     // =================================
     
-    // Post users registration data
+    // Post tasks registration data
     app.post('/addTask', verifyToken, async (req, res) => {
       const newTask = req.body;
       const result = await tasksCollection.insertOne(newTask);
       res.send(result);
     })
+
+    // Get a specific users' data by email
+    app.get('/tasks/:email', verifyToken, async (req, res) => {
+      const mail = req.params?.email;
+      const results = await tasksCollection.find({ addedByEmail: mail }).toArray();
+      res.send(results);
+    });
 
     // =================================================================
     // mongoDB ping request
