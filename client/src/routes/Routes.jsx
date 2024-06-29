@@ -9,6 +9,7 @@ import LandingPage from "../pages/landingPage/LandingPage";
 import Profile from "../components/dashboard/Profile";
 import AddTask from "../components/dashboard/AddTask";
 import UpcomingTasks from "../components/dashboard/UpcomingTasks";
+import UpdateTask from "../components/dashboard/UpdateTask";
 
 export const router = createBrowserRouter([
     {
@@ -40,17 +41,18 @@ export const router = createBrowserRouter([
             {
                 index: true,
                 element: <Profile />,
-
             },
             {
                 path: "addTask",
                 element: <AddTask />,
-
             },
             {
                 path: "upcomingTasks",
                 element: <UpcomingTasks />,
-
+            },
+            {
+                path: "updateTasks/:id",
+                element: <UpdateTask />,
             },
         ],
     },

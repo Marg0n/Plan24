@@ -170,7 +170,7 @@ const DashboardNav = () => {
                             }
                             alt="avatar"
                         />
-                        <span className="text-sm font-medium ">{user?.displayName}</span>
+                        <span className="text-sm font-medium ml-2">{user?.displayName}</span>
                     </div>
                     <IoLogOutOutline size={25} />
                 </button>

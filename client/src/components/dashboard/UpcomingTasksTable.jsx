@@ -1,5 +1,6 @@
 import { PropTypes } from 'prop-types';
-import { MdDeleteForever } from 'react-icons/md';
+import { MdDeleteForever, MdOutlineChangeCircle } from 'react-icons/md';
+import { Link } from 'react-router-dom';
 import { Tooltip } from 'react-tooltip';
 
 const UpcomingTasksTable = ({ task, idx, handleDelete }) => {
@@ -49,28 +50,28 @@ const UpcomingTasksTable = ({ task, idx, handleDelete }) => {
                         <Tooltip id="delete-tooltip" />
                     </div>
 
-                    {/* <br />
+                    <br />
 
-                <Link
-                    to={`testEdit/${_id}`}
-                    className='flex flex-col gap-2 justify-center items-center'>
+                    <Link
+                        to={`/dashboard/updateTasks/${_id}`}
+                        className='flex flex-col gap-2 justify-center items-center'>
 
-                    <button
-                        // onClick={() => handleChangeActive(_id, !isActive)}
-                        data-tooltip-id="Update-tooltip"
-                        data-tooltip-content='Update'
-                        className='btn btn-neutral hover:btn-info btn-xs btn-circle animate__infinite hover:animate-none animate-spin'
-                    >
-                        <MdOutlineChangeCircle
-                            size={20}
-                            className='text-primary group-hover:text-secondary'
-                        />
-                    </button>
-                    <Tooltip id="Update-tooltip" />
+                        <button
+                            data-tooltip-id="Update-tooltip"
+                            data-tooltip-content='Update'
+                            className='btn btn-neutral hover:btn-info btn-xs btn-circle animate__infinite hover:animate-none animate-spin'
+                        >
+                            <MdOutlineChangeCircle
+                                size={20}
+                                className='text-primary group-hover:text-secondary'
+                            />
+                        </button>
+                        <Tooltip id="Update-tooltip" />
 
-                </Link>*/}
+                    </Link>
 
                 </td>
+                
             </tr>
         </>
     );

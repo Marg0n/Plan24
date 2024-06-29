@@ -159,11 +159,25 @@ async function run() {
       res.send(result);
     })
 
-    // Get a specific users' data by email
+    // Get a specific users' task data by email
     app.get('/tasks/:email', verifyToken, async (req, res) => {
       const mail = req.params?.email;
       const results = await tasksCollection.find({ addedByEmail: mail }).toArray();
       res.send(results);
+    });
+
+    // Get a specific tasks' data by id
+    app.get('/getTask/:id', verifyToken, async (req, res) => {
+      try {
+        const id = req.params?.id;
+        // console.log('id===>',id);
+        const result = await tasksCollection.findOne({ _id: new ObjectId(id) });
+        res.send(result);
+      }
+      catch (err) {
+        console.error('Error updating user status:', err);
+        res.status(500).json({ message: 'Internal server error' });
+      }
     });
 
     // delete tasks' data
