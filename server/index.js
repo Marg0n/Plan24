@@ -1,7 +1,6 @@
 const express = require('express');
 const cors = require('cors');
 const jwt = require('jsonwebtoken');
-// const cookieParser = require('cookie-parser');
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 
 
@@ -30,7 +29,6 @@ app.use(cors({
   optionsSuccessStatus: 200,
 }));
 app.use(express.json());
-// app.use(cookieParser());
 
 
 // =================================
@@ -51,8 +49,6 @@ const verifyToken = async (req, res, next) => {
   // validate local storage token
   const token = await initialToken.split(' ')[1];
 
-  // const token = req?.cookies?.token;
-  // console.log('token :::>', token)
 
   if (!token) {
     return res.status(401).send({ message: 'Unauthorized access...' });
@@ -82,7 +78,6 @@ app.post("/jwt", async (req, res) => {
   const token = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '10h' });
 
   res
-    // .cookie("token", token, cookieOptions)
     // .send({ success: true });
     .send({ token });
 });
@@ -95,9 +90,7 @@ app.post("/jwt", async (req, res) => {
 app.get("/logout", async (req, res) => {
   const user = req.body;
   console.log("logging out", user);
-  res
-    // .clearCookie("token", { ...cookieOptions, maxAge: 0 })
-    .send({ success: true });
+  res.send({ success: true });
 });
 
 //routes
@@ -138,38 +131,33 @@ async function run() {
     // =================================
     // DB Collections' Connection
     // =================================
-    const usersCollection = client.db("mediHouseDB").collection("users");
-    const testsCollection = client.db("mediHouseDB").collection("tests");
-    const bookingsCollection = client.db("mediHouseDB").collection("bookings");
-    const bannersCollection = client.db("mediHouseDB").collection("banners");
-
-
-
-    // =================================
-    // Admin verify 
-    // =================================
-
-    // verify admin access after jwt validation
-    const verifyAdmin = async (req, res, next) => {
-      const email = req.decoded.email;
-      // console.log('from verify admin -->', email);
-      const query = { email: email };
-      const user = await usersCollection.findOne(query);
-      const isAdmin = user?.isAdmin === true;
-      if (!isAdmin) {
-        return res.status(403).send({ message: "Unauthorized!!" });
-      }
-
-      next();
-    }
-    
+    const usersCollection = client.db("plan24").collection("users");
+    const tasksCollection = client.db("plan24").collection("tasks");
 
 
     // =================================
     // API Connections for users
     // =================================
     
+    // Post users registration data
+    app.post('/users', async (req, res) => {
+      const newUser = req.body;
+      const result = await usersCollection.insertOne(newUser);
+      res.send(result);
+    })
 
+
+
+    // =================================
+    // API Connections for tasks
+    // =================================
+    
+    // Post users registration data
+    app.post('/addTask', verifyToken, async (req, res) => {
+      const newTask = req.body;
+      const result = await tasksCollection.insertOne(newTask);
+      res.send(result);
+    })
 
     // =================================================================
     // mongoDB ping request

@@ -37,7 +37,7 @@ Online Task Management System that allows users to manage their tasks, deadlines
 - [sweetalert2](https://sweetalert2.github.io/#download)
 - [react-toastify](https://www.npmjs.com/package/react-toastify)
 - [AXIOS](https://axios-http.com/docs/intro)
-- [Swiper](https://swiperjs.com/)
+- [React Tooltip](https://react-tooltip.com)
 - [React Awesome Reveal](https://www.npmjs.com/package/react-awesome-reveal)
 - [Express](https://expressjs.com)
 - [MongoDB](https://cloud.mongodb.com)
