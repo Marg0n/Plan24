@@ -6,6 +6,7 @@ import { useQuery } from "@tanstack/react-query";
 import Loader from "../shared/Loader";
 import useAuth from "../../hooks/useAuth";
 import UpcomingTasksTable from "./UpcomingTasksTable";
+import Swal from "sweetalert2";
 
 
 const UpcomingTasks = () => {
@@ -23,6 +24,62 @@ const UpcomingTasks = () => {
             return data
         }
     })
+
+    // delete
+    const handleDelete = (id) => {
+        setCustomLoading(true);
+
+        const swalWithBootstrapButtons = Swal.mixin({
+            customClass: {
+                confirmButton: "btn btn-success ml-2",
+                cancelButton: "btn btn-danger mr-2"
+            },
+            buttonsStyling: false
+        });
+        swalWithBootstrapButtons.fire({
+            title: "Are you sure?",
+            text: "You won't be able to revert this! 😱",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Yes, delete it!😉",
+            cancelButtonText: "No, cancel! 😨",
+            reverseButtons: true
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                //delete
+                const { data } = await axiosSecure.delete(`/deleteTasks/${id}`)
+
+                if (data.deletedCount > 0) {
+                    swalWithBootstrapButtons.fire({
+                        title: "Deleted!",
+                        text: "Task has been deleted! 🥲",
+                        icon: "success"
+                    });
+                    //reset the page 
+                    setCustomLoading(false);
+                    refetch()
+                }
+
+            } else if (
+                /* Read more about handling dismissals below */
+                result.dismiss === Swal.DismissReason.cancel
+            ) {
+                swalWithBootstrapButtons.fire({
+                    title: "Delete Cancelled!",
+                    text: "Test is still there! ✌️",
+                    icon: "error"
+                });
+                setCustomLoading(false);
+                refetch()
+            }
+            setCustomLoading(false);
+            refetch()
+        });
+        setCustomLoading(false);
+        refetch()
+
+
+    };
 
     // waiting time loader
     const [timeLoading, setTimeLoading] = useState(true);
@@ -71,13 +128,13 @@ const UpcomingTasks = () => {
                     </thead>
 
                     {/* body */}
-                    <tbody>
+                    <tbody className="text-xs">
                         {/* row  */}
                         {
                             tasks?.map((task, idx) => {
                                 return <UpcomingTasksTable
                                     key={task._id} task={task} idx={idx}
-                                // handleDelete={handleDelete}
+                                    handleDelete={handleDelete}
                                 // handleChangeActive={handleChangeActive}
                                 />
                             })

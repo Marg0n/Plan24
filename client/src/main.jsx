@@ -7,6 +7,8 @@ import { ToastContainer } from 'react-toastify'
 import { router } from './routes/Routes.jsx'
 import AuthProvider from './firebase/AuthProvider.jsx'
 import { QueryClient, QueryClientProvider, } from '@tanstack/react-query'
+import 'animate.css';
+import 'react-tooltip/dist/react-tooltip.css';
 
 
 const queryClient = new QueryClient()

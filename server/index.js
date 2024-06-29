@@ -138,7 +138,7 @@ async function run() {
     // =================================
     // API Connections for users
     // =================================
-    
+
     // Post users registration data
     app.post('/users', async (req, res) => {
       const newUser = req.body;
@@ -151,7 +151,7 @@ async function run() {
     // =================================
     // API Connections for tasks
     // =================================
-    
+
     // Post tasks registration data
     app.post('/addTask', verifyToken, async (req, res) => {
       const newTask = req.body;
@@ -165,6 +165,51 @@ async function run() {
       const results = await tasksCollection.find({ addedByEmail: mail }).toArray();
       res.send(results);
     });
+
+    // delete tasks' data
+    app.delete('/deleteTasks/:id', verifyToken, async (req, res) => {
+      const id = req.params?.id;
+      const result = await tasksCollection.deleteOne({ _id: new ObjectId(id) });
+      res.send(result);
+    });
+
+    // Update tasks' data by id
+    app.put('/updateTasks/:id', async (req, res) => {
+      const id = req.params?.id;
+      const request = req.body;
+      const query = { _id: new ObjectId(id) };
+      const options = { upsert: true };
+      const data = {
+        $set: {
+          ...request,
+        }
+      }
+      const result = await tasksCollection.updateOne(query, data, options);
+      res.send(result);
+    });
+
+    // Patch a tasks' Status by id
+    // app.patch('/taskStatus/:id', verifyToken, async (req, res) => {
+    //   try {
+    //     const id = req.params?.id; // Extract the user id from the request parameters
+    //     const updateBody = req.body; // Extract the new status from the request body
+    //     const query = { _id: new ObjectId(id) }
+    //     const updateDoc = {
+    //       $set: {
+    //         status: updateBody.status,
+    //       },
+    //     }
+
+    //     const results = await tasksCollection.updateOne(query, updateDoc);
+    //     res.send(results);
+    //   }
+    //   catch (err) {
+    //     // If an error occurs during execution, catch it here
+    //     console.error('Error updating user status:', err);
+    //     // Send an error response to the client
+    //     res.status(500).json({ message: 'Internal server error' });
+    //   }
+    // });
 
     // =================================================================
     // mongoDB ping request

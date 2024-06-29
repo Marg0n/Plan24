@@ -32,7 +32,9 @@ const AddTask = () => {
     // Submit button for updating
     const onSubmit = async (data) => {
 
-        const { title, description, due_date, priority, category, status } = data;
+        const { title, description, due_date, priority: weight, category, status } = data;
+
+        const priority = parseInt(weight);
 
 
         try {

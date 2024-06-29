@@ -1,62 +1,55 @@
 import { PropTypes } from 'prop-types';
+import { MdDeleteForever } from 'react-icons/md';
+import { Tooltip } from 'react-tooltip';
 
-const UpcomingTasksTable = ({task, idx}) => {
+const UpcomingTasksTable = ({ task, idx, handleDelete }) => {
 
     const { _id, title, description, due_date, priority, category, status, addedByEmail } = task;
 
     return (
         <>
-        <tr>
+            <tr>
 
-            <td>
-                {idx+1}
-            </td>
-            <td>{title}</td>
-            <td>
-                {description}
-            </td>
-            <td>{due_date}</td>
-            <td>{priority}</td>
-            <td>{category}</td>
-            <td>{status}</td>
-            <td>{}</td>
-            <td>{addedByEmail}</td>
-            <td>{}</td>
+                <td>
+                    {idx + 1}
+                </td>
+                <td>{title}</td>
+                <td>
+                    {description}
+                </td>
+                <td>{due_date}</td>
+                <td>
+                    {
+                        priority === 0 ? 'Low' : (priority === 1 ? 'Mid' : 'High')
+                    }
+                </td>
+                <td>{category}</td>
+                <td>
+                    {status}
+                    <br />
+
+                </td>
+                <td>{ }</td>
+                <td>{addedByEmail}</td>
 
 
-            {/* <td className='flex flex-col items-center gap-4 justify-center'>
+                <td className='flex flex-col items-center gap-4 justify-center'>
 
-                <div>
-                    <button
-                        onClick={() => handleDelete(_id)}
-                        data-tooltip-id="delete-tooltip"
-                        data-tooltip-content="Delete"
-                        className='btn btn-neutral hover:btn-error btn-xs  animate__animated animate__tada animate__infinite hover:animate-none'>
+                    <div>
+                        <button
+                            onClick={() => handleDelete(_id)}
+                            data-tooltip-id="delete-tooltip"
+                            data-tooltip-content="Delete"
+                            className='btn btn-neutral hover:btn-error btn-xs  animate__animated animate__tada animate__infinite hover:animate-none'>
 
-                        <MdDeleteForever size={20}
-                            className='text-primary group-hover:text-secondary' />
+                            <MdDeleteForever size={20}
+                                className='text-primary group-hover:text-secondary' />
 
-                    </button>
-                    <Tooltip id="delete-tooltip" />
-                </div>
+                        </button>
+                        <Tooltip id="delete-tooltip" />
+                    </div>
 
-                <br />
-
-                <div>
-                    <button
-                        onClick={() => handlePDF()}
-                        data-tooltip-id="update-tooltip"
-                        data-tooltip-content="Download"
-                        className='btn btn-neutral hover:btn-info btn-xs animate__animated  animate__jello animate__infinite hover:animate-none'>
-                        <FaDownload
-                            size={20}
-                            className='text-primary group-hover:text-secondary'
-                        />
-                    </button>
-                    <Tooltip id="update-tooltip" />
-                </div>
-
-                <br />
+                    {/* <br />
 
                 <Link
                     to={`testEdit/${_id}`}
@@ -75,11 +68,11 @@ const UpcomingTasksTable = ({task, idx}) => {
                     </button>
                     <Tooltip id="Update-tooltip" />
 
-                </Link>
+                </Link>*/}
 
-            </td> */}
-        </tr>
-    </>
+                </td>
+            </tr>
+        </>
     );
 };
 
@@ -87,7 +80,7 @@ const UpcomingTasksTable = ({task, idx}) => {
 UpcomingTasksTable.propTypes = {
     task: PropTypes.object,
     idx: PropTypes.number,
-    // handleDelete: PropTypes.func,
+    handleDelete: PropTypes.func,
 }
 
 export default UpcomingTasksTable;
