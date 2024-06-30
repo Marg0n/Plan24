@@ -4,9 +4,7 @@ Online Task Management System that allows users to manage their tasks, deadlines
 
 ## Live site:
 
-- [Live Site]()
-
-
+- [Live Site](https://plan24.netlify.app)
 
 ## Key Features:
 
@@ -19,7 +17,6 @@ Online Task Management System that allows users to manage their tasks, deadlines
 - Search and Filters: Implement search and filtering optionsto easily find tasks based on keywords, due dates, priorities, and categories.
 - User Dashboard: Provide users with a dashboard showing an overview of their tasks, upcoming deadlines, and progress.
 - Mobile Responsiveness: Ensure the application is responsive and works seamlessly onmobile devices.
-
 
 ## Resources:
 
@@ -44,4 +41,3 @@ Online Task Management System that allows users to manage their tasks, deadlines
 - [MongoDB](https://cloud.mongodb.com)
 - [JWT](https://jwt.io/libraries?language=Node.js)
 - [Stripe](https://docs.stripe.com/checkout/quickstart?client=react&lang=node)
-
