@@ -3,21 +3,110 @@ import useAuth from './../../hooks/useAuth';
 import { FiEdit } from 'react-icons/fi';
 import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
-// import logo from '/logo_mediHouse.png';
+import { GiRingingBell } from "react-icons/gi";
+import { useQuery } from '@tanstack/react-query';
+import Loader from '../shared/Loader';
+import useAxiosSecure from '../../hooks/useAxiosSecure';
+import { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
+// import logo from '/logo.png';
 
 const Profile = () => {
 
     const { user } = useAuth();
+    const axiosSecure = useAxiosSecure()
+
+    // Notification state
+    const [notification, setNotification] = useState(false);
+    const [upcomingTasks, setUpcomingTasks] = useState([]);
+
+    // fetch the tasks' data
+    const { data: tasks, isLoading, refetch } = useQuery({
+        queryKey: ['tasks', user],
+        queryFn: async () => {
+            const { data } = await axiosSecure(`/tasks/${user?.email}`)
+            return data
+        }
+    })
+
+    // to display the upcoming tasks
+    const toaster = async () => {
+        await tasks?.map(t => {
+            // console.log(t.due_date)
+            const dueDate = new Date(t.due_date);
+            const today = new Date();
+            const timeDifference = dueDate.getTime() - today.getTime();
+            const daysDifference = Math.ceil(timeDifference / (1000 * 3600 * 24));
+
+            if (daysDifference === 1) {
+                toast.info(`Upcoming task of ${t.title}'s due date is one day away!`, { autoClose: 5000, theme: "colored" })
+            }
+        });
+    }
+
+    // To get the upcoming title of the task
+    const notify = async () => {
+        const upcomingTaskTitles = tasks?.filter(t => {
+            const dueDate = new Date(t.due_date);
+            const today = new Date();
+            const timeDifference = dueDate.getTime() - today.getTime();
+            const daysDifference = Math.ceil(timeDifference / (1000 * 3600 * 24));
+            return daysDifference === 1;
+        }).map(t => t.title);
+
+        setUpcomingTasks(upcomingTaskTitles);
+        setNotification(true);
+    };
+
+    useEffect(() => {
+        notify();
+        toaster();
+        refetch()
+    }, [user, tasks]);
+
+
+    // waiting time loader
+    const [timeLoading, setTimeLoading] = useState(true);
+
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setTimeLoading(false);
+        }, 3000);
+
+        return () => clearTimeout(timer);
+    }, []);
+
+    if (isLoading && timeLoading) {
+        <Loader />
+    }
 
 
     return (
         <div
-            className='flex flex-col gap-7 justify-center items-center min-h-[calc(100vh-50px)] w-11/12 mx-auto rounded-lg glass shadow-2xl text-primary bg-cover bg-no-repeat bg-center '
-            // style={{backgroundImage: `url(${imagePath})`}}
+            className='flex flex-col gap-7 justify-center items-center min-h-[calc(100vh-50px)] w-11/12 mx-auto rounded-lg glass shadow-2xl text-primary bg-cover bg-no-repeat bg-center relative'
+        // style={{backgroundImage: `url(${imagePath})`}}
         >
             <Helmet>
                 <title>{import.meta.env.VITE_WEBSITE} | Profile</title>
             </Helmet>
+
+
+            {upcomingTasks?.length > 0 && (
+                <ul className='absolute right-4 top-4 menu menu-horizontal w-40'>
+                    <details className='w-full'>
+
+                        <summary className='flex gap-3 justify-end'>
+                            {/* Upcoming Tasks */}
+                            <GiRingingBell size={25} className={`${!notification ? 'animate-none hidden' : 'animate__animated animate__shakeX animate__infinite hover:animate-none '}`} />
+                        </summary>
+                        <ul className="rounded-t-none p-2">
+                            {upcomingTasks?.map((taskTitle, index) => (
+                                <li key={index}>Task {index+1}: {taskTitle}</li>
+                            ))}
+                        </ul>
+                    </details>
+                </ul>
+            )}
 
             {/* display pic, name and mail */}
             <div className=''>

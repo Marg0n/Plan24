@@ -162,11 +162,33 @@ async function run() {
     // Get a specific users' upcoming task data by email
     app.get('/tasks/:email', verifyToken, async (req, res) => {
       const mail = req.params?.email;
-      const today = req.query?.today;
+      const today = req.query?.today || '';
+      const filter = req.query?.filter || '';
+      const search = req.query?.search || '';
+      const category = req.query?.categ || '';
+      const weight = parseInt(req.query?.weight) || NaN;
 
       let query = {
         addedByEmail: mail,
-        due_date: { $gte: today }, // Filter dates greater than or equal to today's date
+        due_date: { $gte: today }, // Filter dates greater than or equal to today's date     
+      }
+      if (filter) {
+        query = { ...query, due_date: { $eq: filter } }; // Filter dates equal to the filter date
+      }
+      if (weight) {
+        query = { ...query, priority: weight };
+      }
+      if (search) {
+        query = {
+          ...query,
+          title: { $regex: search, $options: 'i' },
+        };
+      }
+      if (category) {
+        query = {
+          ...query,
+          category: { $regex: category, $options: 'i' },
+        };
       }
 
       const results = await tasksCollection

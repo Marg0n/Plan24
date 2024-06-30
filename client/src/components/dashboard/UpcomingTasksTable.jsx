@@ -21,7 +21,7 @@ const UpcomingTasksTable = ({ task, idx, handleDelete }) => {
                 <td>{due_date}</td>
                 <td>
                     {
-                        priority === 0 ? 'Low' : (priority === 1 ? 'Mid' : 'High')
+                        priority === 3 ? 'Low' : (priority === 1 ? 'Mid' : 'High')
                     }
                 </td>
                 <td>{category}</td>
