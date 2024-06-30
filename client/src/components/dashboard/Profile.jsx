@@ -1,13 +1,14 @@
-import { Tooltip } from 'react-tooltip';
-import useAuth from './../../hooks/useAuth';
-import { Helmet } from 'react-helmet-async';
-import { GiRingingBell } from "react-icons/gi";
 import { useQuery } from '@tanstack/react-query';
-import Loader from '../shared/Loader';
-import useAxiosSecure from '../../hooks/useAxiosSecure';
 import { useEffect, useState } from 'react';
-import { FaTasks } from "react-icons/fa";
+import { Helmet } from 'react-helmet-async';
 import { BiTask } from "react-icons/bi";
+import { FaTasks } from "react-icons/fa";
+import { GiRingingBell } from "react-icons/gi";
+import { Tooltip } from 'react-tooltip';
+import useAxiosSecure from '../../hooks/useAxiosSecure';
+import Loader from '../shared/Loader';
+import useAuth from './../../hooks/useAuth';
+import ProgressPieChart from './ProgressPieChart';
 // import { toast } from 'react-toastify';
 // import logo from '/logo.png';
 
@@ -37,6 +38,15 @@ const Profile = () => {
             return data
         }
     })
+
+    // Fetch all the data for statistics by email
+    const { data: statData = {}, isLoading: statLoad } = useQuery({
+        queryKey: ['statData'],
+        queryFn: async () => {
+            const { data } = await axiosSecure(`/progressStat/${user?.email}`);
+            return data;
+        }
+    });
 
 
     // To get the upcoming title of the task
@@ -72,7 +82,7 @@ const Profile = () => {
         return () => clearTimeout(timer);
     }, []);
 
-    if (isLoading && timeLoading) {
+    if (statLoad || isLoading || timeLoading) {
         <Loader />
     }
 
@@ -146,7 +156,7 @@ const Profile = () => {
                 </div>
 
                 <div className="stat">
-                <div className="stat-figure text-primary">
+                    <div className="stat-figure text-primary">
                         <BiTask size={45} />
                     </div>
                     <div className="stat-title">Upcoming Deadlines</div>
@@ -160,6 +170,19 @@ const Profile = () => {
                     <div className="stat-desc">↘︎ 90 (14%)</div>
                 </div> */}
             </div>
+
+
+            {/* Total Sales Graph */}
+            <div
+                className='w-11/12 flex justify-center items-center mb-4'
+            >
+                {/* Render Chart Here */}
+                <ProgressPieChart
+                    data={statData}
+                    title={'Progress Over Time'}
+                />
+            </div>
+
         </div>
     );
 };

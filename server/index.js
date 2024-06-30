@@ -212,6 +212,69 @@ async function run() {
       }
     });
 
+    // tasks status progress for chart
+    app.get('/progressStat/:email', verifyToken, async (req, res) => {
+      try {
+        const email = req.params?.email;
+        const tasks  = await tasksCollection.find(
+          { addedByEmail: email },
+          {
+            projection: {
+              status: 1,
+            },
+          },
+        ).toArray();
+
+        // Initialize counters for each status
+        let todoCount = 0;
+        let inProgressCount = 0;
+        let completedCount = 0;
+
+        // Count occurrences of each status
+        tasks.forEach(task => {
+          switch (task.status) {
+            case 'To-Do':
+              todoCount++;
+              break;
+            case 'In-Progress':
+              inProgressCount++;
+              break;
+            case 'Completed':
+              completedCount++;
+              break;
+            default:
+              // Handle any other status values if needed
+              break;
+          }
+        });
+
+        // Prepare the data in the desired format
+        const chartData = [
+          ['Status', 'Progression'],
+          ['To-Do', todoCount],
+          ['In-Progress', inProgressCount],
+          ['Completed', completedCount],
+        ];
+
+        // const chartData = tasksCollection.map(tasks => {
+
+        //   const data = [tasks?.status, tasks?.status]
+
+        //   return data
+        // })
+
+
+        // chartData.unshift(['Date', 'Progression'])
+        // chartDataStatus.unshift(['Date', 'Status'])
+
+
+        res.send( chartData );
+      } catch (error) {
+        console.error('Error fetching task data:', error);
+        res.status(500).send({ message: 'Internal server error from stat' });
+      }
+    })
+
     // Get a specific tasks' data by id
     app.get('/getTask/:id', verifyToken, async (req, res) => {
       try {
