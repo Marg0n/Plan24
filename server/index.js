@@ -199,6 +199,19 @@ async function run() {
       res.send(results);
     });
 
+    // Get a specific users' total tasks' data by email
+    app.get('/totalTasks/:email', verifyToken, async (req, res) => {
+      try {
+        const mail = req.params?.email;
+        const result = await tasksCollection.find({ addedByEmail: mail }).toArray();
+        res.send(result);
+      }
+      catch (err) {
+        console.error('Error updating user status:', err);
+        res.status(500).json({ message: 'Internal server error' });
+      }
+    });
+
     // Get a specific tasks' data by id
     app.get('/getTask/:id', verifyToken, async (req, res) => {
       try {

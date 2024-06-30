@@ -166,13 +166,13 @@ const UpcomingTasks = () => {
                 </h3>
             </AttentionSeeker>
 
-            <div className='flex flex-col md:flex-row justify-center items-center gap-5 '>
+            <div className='flex flex-col lg:flex-row justify-center items-center gap-5 '>
 
 
 
 
                 <form
-                    className="flex gap-6"
+                    className="flex gap-6 flex-col lg:flex-row justify-center items-center "
                     onSubmit={handleSubmit(onSubmit)}
                 >
 

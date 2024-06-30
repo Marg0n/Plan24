@@ -38,6 +38,7 @@ Online Task Management System that allows users to manage their tasks, deadlines
 - [react-toastify](https://www.npmjs.com/package/react-toastify)
 - [AXIOS](https://axios-http.com/docs/intro)
 - [React Tooltip](https://react-tooltip.com)
+- [React Google Charts](https://www.react-google-charts.com)
 - [React Awesome Reveal](https://www.npmjs.com/package/react-awesome-reveal)
 - [Express](https://expressjs.com)
 - [MongoDB](https://cloud.mongodb.com)

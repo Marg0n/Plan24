@@ -1,14 +1,14 @@
 import { Tooltip } from 'react-tooltip';
 import useAuth from './../../hooks/useAuth';
-import { FiEdit } from 'react-icons/fi';
-import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { GiRingingBell } from "react-icons/gi";
 import { useQuery } from '@tanstack/react-query';
 import Loader from '../shared/Loader';
 import useAxiosSecure from '../../hooks/useAxiosSecure';
 import { useEffect, useState } from 'react';
-import { toast } from 'react-toastify';
+import { FaTasks } from "react-icons/fa";
+import { BiTask } from "react-icons/bi";
+// import { toast } from 'react-toastify';
 // import logo from '/logo.png';
 
 const Profile = () => {
@@ -29,20 +29,15 @@ const Profile = () => {
         }
     })
 
-    // to display the upcoming tasks
-    const toaster = async () => {
-        await tasks?.map(t => {
-            // console.log(t.due_date)
-            const dueDate = new Date(t.due_date);
-            const today = new Date();
-            const timeDifference = dueDate.getTime() - today.getTime();
-            const daysDifference = Math.ceil(timeDifference / (1000 * 3600 * 24));
+    // fetch a specific users' total tasks' data by email
+    const { data: totalTasks } = useQuery({
+        queryKey: ['totalTasks', user],
+        queryFn: async () => {
+            const { data } = await axiosSecure(`/totalTasks/${user?.email}`)
+            return data
+        }
+    })
 
-            if (daysDifference === 1) {
-                toast.info(`Upcoming task of ${t.title}'s due date is one day away!`, { autoClose: 5000, theme: "colored" })
-            }
-        });
-    }
 
     // To get the upcoming title of the task
     const notify = async () => {
@@ -52,7 +47,8 @@ const Profile = () => {
             const timeDifference = dueDate.getTime() - today.getTime();
             const daysDifference = Math.ceil(timeDifference / (1000 * 3600 * 24));
             return daysDifference === 1;
-        }).map(t => t.title);
+        })
+        // .map(t => t.title);
 
         setUpcomingTasks(upcomingTaskTitles);
         setNotification(true);
@@ -60,7 +56,7 @@ const Profile = () => {
 
     useEffect(() => {
         notify();
-        toaster();
+        // toaster();
         refetch()
     }, [user, tasks]);
 
@@ -101,7 +97,9 @@ const Profile = () => {
                         </summary>
                         <ul className="rounded-t-none p-2">
                             {upcomingTasks?.map((taskTitle, index) => (
-                                <li key={index}>Task {index+1}: {taskTitle}</li>
+                                <li key={index}>
+                                    Task {index + 1}: {taskTitle.title} <br /> ( Due on {taskTitle.due_date} )
+                                </li>
                             ))}
                         </ul>
                     </details>
@@ -137,33 +135,30 @@ const Profile = () => {
 
             </div>
 
-            <div className='flex w-full items-center justify-center gap-16 '>
-
-                <div>
-                    <p className='text-base font-serif font-semibold'>Total Tasks :</p>
-                    <p className='text-base font-serif font-semibold'>Upcoming Deadlines :</p>
-                    <p className='text-base font-serif font-semibold'>Progress :</p>
+            <div className="stats stats-vertical lg:stats-horizontal shadow">
+                <div className="stat">
+                    <div className="stat-figure text-primary">
+                        <FaTasks size={45} />
+                    </div>
+                    <div className="stat-title">Total Tasks</div>
+                    <div className="stat-value  text-center">{totalTasks?.length}</div>
+                    {/* <div className="stat-desc">Jan 1st - Feb 1st</div> */}
                 </div>
 
-                <div>
-                    <p>none</p>
-                    <p>none</p>
-                    <p>none</p>
+                <div className="stat">
+                <div className="stat-figure text-primary">
+                        <BiTask size={45} />
+                    </div>
+                    <div className="stat-title">Upcoming Deadlines</div>
+                    <div className="stat-value text-center">{upcomingTasks?.length}</div>
+                    {/* <div className="stat-desc">↗︎ 400 (22%)</div> */}
                 </div>
 
-            </div>
-
-            <div className='flex gap-4'>
-                <Link
-                    to={`profileEdit`}
-                    className='flex gap-4 justify-center items-center btn btn-warning animate-pulse hover:animate-none hover:btn-primary'>
-                    Edit Profile  <FiEdit />
-                </Link>
-                <Link
-                    to={`profileEdit/${user?.email}`}
-                    className='flex gap-4 justify-center items-center btn btn-warning animate-pulse hover:animate-none hover:btn-primary'>
-                    Edit Personal Info  <FiEdit />
-                </Link>
+                {/* <div className="stat">
+                    <div className="stat-title">Progress</div>
+                    <div className="stat-value">1,200</div>
+                    <div className="stat-desc">↘︎ 90 (14%)</div>
+                </div> */}
             </div>
         </div>
     );
