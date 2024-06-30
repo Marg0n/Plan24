@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { AiOutlineBars } from "react-icons/ai";
 import { BsClipboard2DataFill } from 'react-icons/bs';
+import { GrTask } from 'react-icons/gr';
 import { IoLogOutOutline } from 'react-icons/io5';
 import { MdSpaceDashboard } from 'react-icons/md';
 import { Link, NavLink } from "react-router-dom";
@@ -8,7 +9,6 @@ import { Tooltip } from "react-tooltip";
 import 'react-tooltip/dist/react-tooltip.css';
 import useAuth from './../../hooks/useAuth';
 import logo from '/logo.png';
-import { GrTask } from 'react-icons/gr';
 
 
 const DashboardNav = () => {
@@ -33,6 +33,7 @@ const DashboardNav = () => {
             <div className=' flex justify-between md:hidden'>
                 <div>
                     <div className='block cursor-pointer p-4 font-bold'>
+                        {/* redirect to... */}
                         <Link to=''>
                             <img
                                 className='w-auto h-7 rounded'
@@ -62,7 +63,8 @@ const DashboardNav = () => {
                 <div className="mx-auto">
                     {/* logo */}
                     <div className=" mx-auto btn btn-ghost  animate__animated animate__heartBeat  animate__infinite">
-                        <Link to="/" className='flex gap-2 items-center'>
+                        {/* redirect to... */}
+                        <Link to="" className='flex gap-2 items-center'>
                             <img className='w-auto h-7 rounded'
                                 referrerPolicy='no-referrer' src={logo} alt='logo' />
                             <span className='font-bold'>{import.meta.env.VITE_WEBSITE}</span>

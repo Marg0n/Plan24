@@ -16,11 +16,23 @@ const UpcomingTasks = () => {
 
     const { user } = useAuth();
 
+    // Date format of today
+    const [today, setToday] = useState('');
+
+    useEffect(() => {
+        const date = new Date();
+        const year = date.getFullYear();
+        const month = ('0' + (date.getMonth() + 1)).slice(-2); // Months are zero indexed so we add one
+        const day = ('0' + date.getDate()).slice(-2); // Pad single digit day values
+        const currentDate = `${year}-${month}-${day}`;
+        setToday(currentDate);
+    }, []);
+
     // fetch the tasks' data
     const { data: tasks, isLoading, refetch } = useQuery({
-        queryKey: ['tasks'],
+        queryKey: ['tasks',today],
         queryFn: async () => {
-            const { data } = await axiosSecure(`/tasks/${user?.email}`)
+            const { data } = await axiosSecure(`/tasks/${user?.email}?today=${today}`)
             return data
         }
     })

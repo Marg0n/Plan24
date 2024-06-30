@@ -159,10 +159,21 @@ async function run() {
       res.send(result);
     })
 
-    // Get a specific users' task data by email
+    // Get a specific users' upcoming task data by email
     app.get('/tasks/:email', verifyToken, async (req, res) => {
       const mail = req.params?.email;
-      const results = await tasksCollection.find({ addedByEmail: mail }).toArray();
+      const today = req.query?.today;
+
+      let query = {
+        addedByEmail: mail,
+        due_date: { $gte: today }, // Filter dates greater than or equal to today's date
+      }
+
+      const results = await tasksCollection
+        .find(query)
+        .sort({ due_date: 1 })
+        .toArray();
+
       res.send(results);
     });
 
@@ -224,6 +235,74 @@ async function run() {
     //     res.status(500).json({ message: 'Internal server error' });
     //   }
     // });
+
+
+    // get specific data for appointments for admin statistics 
+    app.get('/taskStat', verifyToken, async (req, res) => {
+      const taskDetails = await tasksCollection.find(
+        {},
+        {
+          projection: {
+            due_date: 1,
+            status: 1,
+          },
+        },
+      ).toArray();
+
+      const totalUsers = await usersCollection.countDocuments()
+      const totalBanners = await bannersCollection.countDocuments()
+      const totalTests = await testsCollection.countDocuments()
+      const totalPrice = bookingDetails.reduce((sum, booking) => sum + booking.testPrice, 0)
+
+      const chartData = bookingDetails.map(booking => {
+        const day = new Date(booking.appointmentsDate).getDate();
+        const month = new Date(booking.appointmentsDate).getMonth() + 1;
+        const year = new Date(booking.appointmentsDate).getFullYear();
+        const date = day + "/" + month + "/" + year
+
+        const data = [date, booking?.testPrice]
+
+        return data
+      })
+
+
+      chartData.unshift(['Date', 'Sales'])
+      // chartDataStatus.unshift(['Date', 'Status'])
+
+      const statusCounts = {};
+      bookingDetails.forEach(booking => {
+        const day = new Date(booking.appointmentsDate).getDate();
+        const month = new Date(booking.appointmentsDate).getMonth() + 1;
+        const year = new Date(booking.appointmentsDate).getFullYear();
+        const date = day + "/" + month + "/" + year;
+
+        if (!statusCounts[date]) {
+          statusCounts[date] = { pending: 0, delivered: 0, canceled: 0 };
+        }
+
+        statusCounts[date][booking.reportStatus]++;
+      });
+
+      const uniqueDates = Object.keys(statusCounts);
+      const chartData2 = [['Date', 'Pending', 'Delivered', 'Canceled']];
+
+      uniqueDates.forEach(date => {
+        const { pending, delivered, canceled } = statusCounts[date];
+        chartData2.push([date, pending, delivered, canceled]);
+      });
+
+      res.send({
+        totalUsers,
+        totalBanners,
+        totalTests,
+        totalBooking: bookingDetails.length,
+        totalPrice,
+        chartData,
+        chartData2
+        // chartDataStatus
+      });
+    })
+
 
     // =================================================================
     // mongoDB ping request
