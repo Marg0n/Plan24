@@ -22,7 +22,7 @@ app.use(cors({
   origin: [
     'http://localhost:5173',
     'http://localhost:5174',
-    // "client_side",
+    "https://smd-plan24.netlify.app",
     // server_side
   ],
   credentials: true,

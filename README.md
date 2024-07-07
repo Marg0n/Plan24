@@ -4,7 +4,7 @@ Online Task Management System that allows users to manage their tasks, deadlines
 
 ## Live site:
 
-- [Live Site](https://plan24.netlify.app)
+- [Live Site](https://smd-plan24.netlify.app)
 
 ## Key Features:
 
