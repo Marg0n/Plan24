@@ -16,7 +16,7 @@ Online Task Management System that allows users to manage their tasks, deadlines
 - Notifications: Send email or in-app notifications for approaching due dates or task updates.
 - Search and Filters: Implement search and filtering optionsto easily find tasks based on keywords, due dates, priorities, and categories.
 - User Dashboard: Provide users with a dashboard showing an overview of their tasks, upcoming deadlines, and progress.
-- Mobile Responsiveness: Ensure the application is responsive and works seamlessly onmobile devices.
+- Mobile Responsiveness: Ensure the application is responsive and works seamlessly on mobile devices.
 
 ## Resources:
 
